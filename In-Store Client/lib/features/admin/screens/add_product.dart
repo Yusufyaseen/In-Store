@@ -190,7 +190,7 @@ class _AddProductState extends State<AddProduct> {
                           const SizedBox(height: 10),
                           const SizedBox(height: 10),
                           CustomButton(
-                            text: 'Sell',
+                            text: 'Add',
                             onTap: () {
                               if (_addProductFormKey.currentState!.validate() &&
                                   images.isNotEmpty) {
@@ -203,7 +203,7 @@ class _AddProductState extends State<AddProduct> {
                                         double.parse(quantityController.text),
                                     category: widget.category,
                                     images: images);
-                                userController.setLoading();
+                                userController.setLoadingToTrue();
                               }
                             },
                             height: height,
@@ -220,7 +220,7 @@ class _AddProductState extends State<AddProduct> {
                             height: 70,
                             width: 70,
                             child: LoadingIndicator(
-                                colors: [Colors.white],
+                                colors: [Colors.black],
                                 indicatorType: Indicator.squareSpin),
                           ),
                         )

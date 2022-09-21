@@ -7,7 +7,6 @@ import 'package:amazon_cloning/features/controllers/user_controller.dart';
 import 'package:amazon_cloning/models/category.dart';
 import 'package:amazon_cloning/models/product.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
@@ -15,6 +14,7 @@ import 'package:http/http.dart' as http;
 
 import '../../../constants/error_handling.dart';
 import '../../../constants/global_variables.dart';
+import '../../../models/order.dart';
 
 class AdminService {
   ProductsController productsController = Get.put(ProductsController());
@@ -36,18 +36,18 @@ class AdminService {
       List<String> imageUrls = [];
       final cloudinary = CloudinaryPublic(cloudName!, uploadPreset!);
       for (int i = 0; i < images.length; i++) {
-        CloudinaryResponse res = await cloudinary
-            .uploadFile(CloudinaryFile.fromFile(images[i].path, folder: category));
+        CloudinaryResponse res = await cloudinary.uploadFile(
+            CloudinaryFile.fromFile(images[i].path, folder: category));
         imageUrls.add(res.secureUrl);
       }
       Product product = Product(
-        name: name,
-        description: description,
-        quantity: quantity,
-        images: imageUrls,
-        category: category,
-        price: price,
-      );
+          name: name,
+          description: description,
+          quantity: quantity,
+          images: imageUrls,
+          category: category,
+          price: price,
+          rating: []);
       http.Response response = await http.post(
           Uri.parse('$url/products/add-product'),
           body: product.toJson(),
@@ -61,8 +61,9 @@ class AdminService {
           onSuccess: () async {
             showSnackBar(context, "Product is created.",
                 color: GlobalVariables.success);
-            productsController.setProduct(Product.fromMap(json.decode(response.body)['data']));
-            userController.setLoading();
+            productsController.setProduct(
+                Product.fromMap(json.decode(response.body)['data']));
+            userController.setLoadingToFalse();
             Navigator.pop(context);
           });
     } catch (e) {
@@ -127,8 +128,9 @@ class AdminService {
           onSuccess: () async {
             showSnackBar(context, "Category is created.",
                 color: GlobalVariables.success);
-            productsController.setProductCategory(Category_.fromMap(json.decode(response.body)['data']));
-            userController.setLoading();
+            productsController.setProductCategory(
+                Category_.fromMap(json.decode(response.body)['data']));
+            userController.setLoadingToFalse();
             Navigator.pop(context);
           });
     } catch (e) {
@@ -172,18 +174,16 @@ class AdminService {
     required String category,
   }) async {
     try {
-      http.Response response = await http.get(
-          Uri.parse('$url/products/$category'),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-            'auth-token': userController.user.token,
-          });
+      http.Response response = await http
+          .get(Uri.parse('$url/products/$category'), headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      });
 
       httpErrorHandling(
           response: response,
           context: context,
           onSuccess: () async {
-            productsController.setProducts(json.decode(response.body)['data']) ;
+            productsController.setProducts(json.decode(response.body)['data']);
           });
     } catch (e) {
       showSnackBar(context, e.toString());
@@ -198,16 +198,70 @@ class AdminService {
           Uri.parse('$url/category/fetch-categories'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
-            'auth-token': userController.user.token,
           });
 
       httpErrorHandling(
           response: response,
           context: context,
           onSuccess: () async {
+
             productsController
                 .setProductCategories(json.decode(response.body)['data']);
           });
+    } catch (e) {
+      // showSnackBar(context, e.toString());
+    }
+  }
+
+  Future<List<Order>> fetchAllOrders(BuildContext context) async {
+    List<Order> orderList = [];
+    try {
+      http.Response res =
+          await http.get(Uri.parse('$url/user/api/get-all-orders'), headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'auth-token': userController.user.token,
+      });
+
+      httpErrorHandling(
+        response: res,
+        context: context,
+        onSuccess: () {
+          List data = json.decode(res.body)['data'];
+          orderList = data.map((order) => Order.fromMap(order)).toList();
+        },
+      );
+    } catch (e) {
+      print(e.toString());
+    }
+    return orderList;
+  }
+
+
+  Future<void> changeOrderStatus({
+    required BuildContext context,
+    required int status,
+    required Order order,
+    required VoidCallback onSuccess,
+  }) async {
+
+    try {
+      http.Response res = await http.post(
+        Uri.parse('$url/user/api/change-order-status'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'auth-token': userController.user.token,
+        },
+        body: json.encode({
+          'id': order.id,
+          'status': status,
+        }),
+      );
+
+      httpErrorHandling(
+        response: res,
+        context: context,
+        onSuccess: onSuccess,
+      );
     } catch (e) {
       showSnackBar(context, e.toString());
     }

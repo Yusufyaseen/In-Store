@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import '../../../constants/global_variables.dart';
 import '../../account/widgets/single_product.dart';
 import '../../controllers/user_controller.dart';
+import '../../product_details/screens/produc_screen.dart';
 
 class PostsScreen extends StatefulWidget {
   static const String routeName = "/posts";
@@ -86,62 +87,70 @@ class _PostsScreenState extends State<PostsScreen> {
                     itemBuilder: (context, index) {
                       final productData =
                           productsController.productsOfCategory[index];
-                      return Card(
-                        elevation: 5,
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: DecoratedBox(
-                                  decoration: const BoxDecoration(
-                                      border: Border(bottom: BorderSide(
-                                        color: Colors.black12,
-                                        width: 1,
-                                      ),)
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Image.network(
-                                      productData.images[0],
+                      return GestureDetector(
+                        onTap: (){
+                          Navigator.pushNamed(
+                              context,
+                              ProductDetailsScreen.routeName,
+                              arguments: {"product": productData},);
+                        },
+                        child: Card(
+                          elevation: 5,
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: DecoratedBox(
+                                    decoration: const BoxDecoration(
+                                        border: Border(bottom: BorderSide(
+                                          color: Colors.black12,
+                                          width: 1,
+                                        ),)
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Image.network(
+                                        productData.images[0],
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    productData.name,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w600),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  const SizedBox(
+                                    width: 5,
                                   ),
-                                ),
-                                if (userController.user.type == 'admin')
-                                  IconButton(
-                                    onPressed: () =>
-                                        deleteProduct(productData.id!),
-                                    icon: const Icon(
-                                      Icons.delete_outline,
-                                      color: Colors.red,
+                                  Expanded(
+                                    child: Text(
+                                      productData.name,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w600),
                                     ),
                                   ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                          ],
+                                  if (userController.user.type == 'admin')
+                                    IconButton(
+                                      onPressed: () =>
+                                          deleteProduct(productData.id!),
+                                      icon: const Icon(
+                                        Icons.delete_outline,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },

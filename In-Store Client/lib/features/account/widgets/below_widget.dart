@@ -16,29 +16,34 @@ class BelowWidget extends StatelessWidget {
         gradient: GlobalVariables.appBarGradient,
       ),
       padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-      child: Row(
-        children: [
-          RichText(
-            text: TextSpan(
-              text: 'Hello, ',
-              style: const TextStyle(
-                fontSize: 22,
-                color: Colors.black,
-              ),
-              children: [
-                TextSpan(
-                  text: user.name,
+      child: GetBuilder(
+        init: UserController(),
+        builder: (UserController controller){
+          return Row(
+            children: [
+              RichText(
+                text: TextSpan(
+                  text: 'Hello, ',
                   style: const TextStyle(
                     fontSize: 22,
                     color: Colors.black,
-                    fontWeight: FontWeight.w600,
                   ),
+                  children: [
+                    TextSpan(
+                      text: controller.user.name,
+                      style: const TextStyle(
+                        fontSize: 22,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        ],
-      ),
+              ),
+            ],
+          );
+        },
+      )
     );
   }
 }

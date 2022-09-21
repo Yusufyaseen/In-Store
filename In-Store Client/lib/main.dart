@@ -1,5 +1,6 @@
 import 'package:amazon_cloning/features/admin/screens/screen.dart';
 import 'package:amazon_cloning/features/admin/service/admin_service.dart';
+import 'package:amazon_cloning/features/home/service/home_service.dart';
 import 'package:amazon_cloning/widgets/bottom_bar.dart';
 
 import './features/auth/services/auth_service.dart';
@@ -31,6 +32,7 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   UserController userController = Get.put(UserController());
   AdminService adminService = AdminService();
+  HomeService homeService = HomeService();
   final box = GetStorage();
   bool a = false;
 
@@ -38,17 +40,18 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    fetchAllCategories();
     AuthService.getUserData().then((value) {
       setState(() {
         a = value;
       });
     });
-    fetchAllCategories();
+
   }
 
   void fetchAllCategories() async {
     await adminService.getCategories(context: context);
+
   }
 
   @override

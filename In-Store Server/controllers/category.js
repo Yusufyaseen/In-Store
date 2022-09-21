@@ -6,7 +6,6 @@ export const addCategory = async (req, res) => {
     const newCategory = await categoryModel.create({
       name,
       image,
-      quantity,
     });
     await newCategory.save();
     return res.status(200).json({ data: newCategory });
@@ -28,7 +27,6 @@ export const deleteCategory = async (req, res) => {
 export const getCategories = async (req, res) => {
   try {
     const categories = await categoryModel.find({});
-    console.log(categories);
     return res.status(200).json({ data: categories });
   } catch (error) {
     return res.status(500).json({ message: error.message });

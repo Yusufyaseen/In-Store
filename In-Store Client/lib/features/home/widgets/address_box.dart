@@ -36,11 +36,16 @@ class _AddressBoxState extends State<AddressBox> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(left: 15),
-              child: Text(
-                "Delivered to ${userController.user.name} jlbwhjkvbwvowbvwvu cwcwcwccovuo",
-                style: const TextStyle(fontWeight: FontWeight.w500),
-                overflow: textOverflow,
-              ),
+              child: GetBuilder(
+                init: UserController(),
+                builder: (UserController controller){
+                  return Text(
+                    "Delivered to ${controller.user.name} ${controller.user.address}",
+                    style: const TextStyle(fontWeight: FontWeight.w500),
+                    overflow: textOverflow,
+                  );
+                },
+              )
             ),
           ),
            Padding(

@@ -1,8 +1,11 @@
 import 'package:amazon_cloning/constants/global_variables.dart';
 import 'package:amazon_cloning/features/account/screens/account_screen.dart';
+import 'package:amazon_cloning/features/cart/screens/cart_screen.dart';
+import 'package:amazon_cloning/features/controllers/user_controller.dart';
 import 'package:amazon_cloning/features/home/screens/screen.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({Key? key}) : super(key: key);
@@ -13,15 +16,14 @@ class BottomBar extends StatefulWidget {
 }
 
 class _BottomBarState extends State<BottomBar> {
+  UserController userController = Get.put(UserController());
   int _page = 0;
   double bottomBarWidth = 42;
   double borderWidth = 5;
   List<Widget> pages = [
     const HomeScreen(),
     const AccountScreen(),
-    const Center(
-      child: Text("Hello Sir Yusuf"),
-    ),
+    const CartScreen(),
   ];
 
   void updatePage(int page) {
@@ -87,11 +89,16 @@ class _BottomBarState extends State<BottomBar> {
                   ),
                 ),
               ),
-              child: Badge(
-                badgeContent: const Text("2"),
-                badgeColor: Colors.white,
-                child: const Icon(Icons.shopping_cart_outlined),
-              ),
+              child: GetBuilder(
+                init: UserController(),
+                builder: (UserController controller){
+                  return Badge(
+                    badgeContent: Text(userController.user.cart.length.toString()),
+                    badgeColor: Colors.white,
+                    child: const Icon(Icons.shopping_cart_outlined),
+                  );
+                },
+              )
             ),
             label: '',
           ),

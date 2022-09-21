@@ -28,12 +28,15 @@ class AuthService {
   }) async {
     try {
       UserModel userModel = UserModel(
-          id: "",
-          name: name,
-          password: password,
-          email: email,
-          type: "",
-          token: "");
+        id: "",
+        name: name,
+        password: password,
+        email: email,
+        type: "",
+        token: "",
+        cart: [],
+        address: '',
+      );
       http.Response response = await http.post(Uri.parse('$url/signup'),
           body: userModel.toJson(),
           headers: <String, String>{
@@ -42,7 +45,7 @@ class AuthService {
       httpErrorHandling(
           response: response,
           context: context,
-          onSuccess: () async{
+          onSuccess: () async {
             showSnackBar(context, "Account is created.",
                 color: GlobalVariables.success);
             await box.write("token", json.decode(response.body)['token']);
@@ -74,14 +77,14 @@ class AuthService {
             await box.write("token", json.decode(response.body)['token']);
             userController.setUserModel(response.body);
 
-            if(userController.user.type == "admin") {
+            if (userController.user.type == "admin") {
               // ignore: use_build_context_synchronously
               Navigator.pushNamedAndRemoveUntil(
-                context, AdminScreen.routeName, (route) => false);
-            }
-            else{
+                  context, AdminScreen.routeName, (route) => false);
+            } else {
               // ignore: use_build_context_synchronously
-              Navigator.pushNamedAndRemoveUntil(context,  BottomBar.routeName, (route) => false);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, BottomBar.routeName, (route) => false);
             }
           });
     } catch (e) {
@@ -94,11 +97,12 @@ class AuthService {
       String? token = box.read('token');
       if (token == null) {
         await box.write("token", '');
+        return false;
       }
-      http.Response tokenRes = await http
-          .post(Uri.parse('$url/validate'), headers: <String, String>{
+      http.Response tokenRes =
+          await http.post(Uri.parse('$url/validate'), headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        'auth-token': token!,
+        'auth-token': token,
       });
       if (tokenRes.statusCode == 200) {
         userController.setUserModel(tokenRes.body);

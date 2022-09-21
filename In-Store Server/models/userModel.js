@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { cartSchema } from "./cart.js";
 
 const userSchema = mongoose.Schema({
   name: { unique: true, type: String, required: true, trim: true },
@@ -20,9 +21,18 @@ const userSchema = mongoose.Schema({
       message: "Please enter a valid e-mail",
     },
   },
+  address: {
+    type: String,
+    default: "",
+  },
   type: {
     type: String,
     default: "user",
+  },
+
+  cart: {
+    type: [cartSchema],
+    required: false,
   },
 });
 

@@ -4,8 +4,10 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 const { SECRET_KEY } = process.env;
+
 export const createUser = async (req, res) => {
   try {
+    console.log("entered");
     const { name, email, password } = req.body;
     const existingUser = await userModel.find({ email });
     if (existingUser.length > 0) {
@@ -17,9 +19,16 @@ export const createUser = async (req, res) => {
       name,
       password: passwordHash,
       email,
+      cart: [],
     });
+    console.log(newUser);
     await newUser.save();
-    return res.status(200).json({ data: newUser });
+
+    const token = jwt.sign({ id: newUser._id }, SECRET_KEY);
+    return res.status(200).json({
+      token,
+      ...newUser._doc,
+    });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -55,6 +64,18 @@ export const validateTokenAndGetData = async (req, res) => {
     const user = await userModel.findById(req.user);
     if (!user) return res.status(400).json({ message: "User is not found" });
     res.status(200).json({ token: req.token, ...user._doc });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const saveAddress = async (req, res) => {
+  try {
+    const { address } = req.body;
+    let user = await userModel.findById(req.user);
+    user.address = address;
+    user = await user.save();
+    return res.status(200).json({ data: user });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

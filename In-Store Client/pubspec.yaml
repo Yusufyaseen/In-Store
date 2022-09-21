@@ -35,6 +35,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   http:
+  flutter_rating_bar: ^4.0.1
   dotted_border:
   get:
   file_picker:
@@ -46,6 +47,8 @@ dependencies:
   carousel_slider:
   loading_indicator:
   charts_flutter:
+  intl:
+  pay: ^1.0.11
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +76,8 @@ flutter:
   assets:
     - .env
     - assets/images/
+    - assets/applepay.json
+    - assets/gpay.json
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -1,3 +1,5 @@
+import 'package:amazon_cloning/features/account/services/account_service.dart';
+import 'package:amazon_cloning/features/admin/screens/order_screen.dart';
 import 'package:amazon_cloning/features/admin/screens/posts.dart';
 import 'package:amazon_cloning/features/admin/service/admin_service.dart';
 import 'package:flutter/material.dart';
@@ -5,22 +7,24 @@ import 'package:flutter/material.dart';
 import '../../../constants/global_variables.dart';
 import 'analytics.dart';
 import 'categories.dart';
-import 'orders.dart';
+
 class AdminScreen extends StatefulWidget {
   const AdminScreen({Key? key}) : super(key: key);
   static const String routeName = "/admin-screen";
+
   @override
   State<AdminScreen> createState() => _AdminScreenState();
 }
 
 class _AdminScreenState extends State<AdminScreen> {
   AdminService adminService = AdminService();
+  AccountService accountService = AccountService();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
   }
-
 
   int _page = 0;
   double bottomBarWidth = 42;
@@ -28,8 +32,8 @@ class _AdminScreenState extends State<AdminScreen> {
 
   List<Widget> pages = [
     const CategoriesScreen(),
-    const AnalyticsScreen(),
-    const OrdersScreen(),
+    // const AnalyticsScreen(),
+    const OrderScreen(),
   ];
 
   void updatePage(int page) {
@@ -37,10 +41,11 @@ class _AdminScreenState extends State<AdminScreen> {
       _page = page;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:  PreferredSize(
+      appBar: PreferredSize(
         preferredSize: const Size.fromHeight(50),
         child: AppBar(
           flexibleSpace: Container(
@@ -53,23 +58,19 @@ class _AdminScreenState extends State<AdminScreen> {
             children: [
               Expanded(
                 child: Container(
-                  padding: const EdgeInsets.only(top: 8),
-                  alignment: Alignment.topLeft,
-                  child: Image.asset(
-                    'assets/images/amazon.png',
-                    height: 110,
-                    width: 120,
-                    color: Colors.black,
-                  ),
-                ),
+                    padding: const EdgeInsets.only(top: 8),
+                    alignment: Alignment.topLeft,
+                    child: const Text(
+                      "In.Store",
+                      style: TextStyle(
+                          color: GlobalVariables.unselectedNavBarColor,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 25),
+                    )),
               ),
-              const Text(
-                'Admin',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              )
+              IconButton(
+                  onPressed: () => accountService.logOut(context),
+                  icon: const Icon(Icons.logout_outlined))
             ],
           ),
         ),
@@ -104,25 +105,25 @@ class _AdminScreenState extends State<AdminScreen> {
             label: '',
           ),
           // ANALYTICS
-          BottomNavigationBarItem(
-            icon: Container(
-              width: bottomBarWidth,
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(
-                    color: _page == 1
-                        ? GlobalVariables.selectedNavBarColor
-                        : GlobalVariables.backgroundColor,
-                    width: bottomBarBorderWidth,
-                  ),
-                ),
-              ),
-              child: const Icon(
-                Icons.analytics_outlined,
-              ),
-            ),
-            label: '',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Container(
+          //     width: bottomBarWidth,
+          //     decoration: BoxDecoration(
+          //       border: Border(
+          //         top: BorderSide(
+          //           color: _page == 1
+          //               ? GlobalVariables.selectedNavBarColor
+          //               : GlobalVariables.backgroundColor,
+          //           width: bottomBarBorderWidth,
+          //         ),
+          //       ),
+          //     ),
+          //     child: const Icon(
+          //       Icons.analytics_outlined,
+          //     ),
+          //   ),
+          //   label: '',
+          // ),
           // ORDERS
           BottomNavigationBarItem(
             icon: Container(
@@ -146,6 +147,5 @@ class _AdminScreenState extends State<AdminScreen> {
         ],
       ),
     );
-
   }
 }

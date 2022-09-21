@@ -23,23 +23,11 @@ class AccountScreen extends StatelessWidget {
           ),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Image.asset(
-                "assets/images/amazon.png",
-                height: 110,
-                width: 120,
-                color: Colors.black,
+            children: const [
+              Expanded(
+                child: Text("In.Store", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25,color: GlobalVariables.unselectedNavBarColor),)
               ),
-              Container(
-                padding: const EdgeInsets.only(left: 15, right: 15),
-                child: Row(
-                  children: [
-                    const Icon(Icons.notifications_outlined),
-                    SizedBox(width: width*0.01,),
-                    const Icon(Icons.search)
-                  ],
-                ),
-              )
+
             ],
           ),
         ),

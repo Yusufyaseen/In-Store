@@ -155,7 +155,7 @@ class _AddCategoryState extends State<AddCategory> {
                                 name: categoryNameController.text,
                                 image: image!,
                               );
-                              userController.setLoading();
+                              userController.setLoadingToTrue();
                             }
                           },
                           height: height,

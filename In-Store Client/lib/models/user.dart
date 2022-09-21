@@ -7,24 +7,29 @@ class UserModel {
   final String email;
   final String type;
   final String token;
+  final String address;
+  final List<dynamic> cart;
 
-  UserModel({
-    required this.id,
-    required this.name,
-    required this.password,
-    required this.email,
-    required this.type,
-    required this.token,
-  });
+  UserModel(
+      {required this.id,
+      required this.name,
+      required this.password,
+      required this.email,
+      required this.type,
+      required this.token,
+      required this.address,
+      required this.cart});
 
-  Map<String, dynamic> toMap(){
+  Map<String, dynamic> toMap() {
     return {
       "id": id,
       "name": name,
       "password": password,
       "email": email,
+      'address': address,
       "type": type,
       "token": token,
+      "cart": cart
     };
   }
 
@@ -32,16 +37,40 @@ class UserModel {
     return UserModel(
       id: map['_id'] ?? '',
       name: map['name'] ?? '',
+      address: map['address'] ?? '',
       email: map['email'] ?? '',
       password: map['password'] ?? '',
       type: map['type'] ?? '',
       token: map['token'] ?? '',
-
+      cart: map['cart'] != null ? List<Map<String, dynamic>>.from(
+          map['cart']?.map((cart) => Map<String, dynamic>.from(cart))) : [],
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory UserModel.fromJson(String source) => UserModel.fromMap(json.decode(source));
+  factory UserModel.fromJson(String source) =>
+      UserModel.fromMap(json.decode(source));
 
+  UserModel copyWith({
+    String? id,
+    String? name,
+    String? email,
+    String? password,
+    String? address,
+    String? type,
+    String? token,
+    List<dynamic>? cart,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      address: address ?? this.address,
+      type: type ?? this.type,
+      token: token ?? this.token,
+      cart: cart ?? this.cart,
+    );
+  }
 }

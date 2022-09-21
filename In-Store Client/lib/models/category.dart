@@ -3,13 +3,11 @@ import 'dart:convert';
 class Category_ {
   final String name;
   final String image;
-  int? quantity;
   final String? id;
 
   Category_({
     required this.name,
     required this.image,
-    this.quantity = 0,
     this.id,
   });
 
@@ -17,7 +15,6 @@ class Category_ {
     return {
       'name': name,
       'image': image,
-      'quantity': quantity,
       'id': id,
     };
   }
@@ -26,7 +23,6 @@ class Category_ {
     return Category_(
       name: map['name'] ?? '',
       image: map['image'] ?? '',
-      quantity: map['quantity'],
       id: map['_id'],
     );
   }

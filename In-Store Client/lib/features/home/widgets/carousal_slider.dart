@@ -8,8 +8,8 @@ class CarouselImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 200,
+    return SizedBox(
+      height: 150,
       width: double.infinity,
       child: CarouselSlider.builder(
         itemCount: GlobalVariables.carouselImages.length,

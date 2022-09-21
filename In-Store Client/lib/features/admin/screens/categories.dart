@@ -111,7 +111,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             floatingActionButton: FloatingActionButton(
 
               onPressed: navigateToAddCategory,
-              tooltip: 'Add a category',
+              tooltip: 'Add category',
               child: const Icon(Icons.add),
             ),
             // floatingActionButtonLocation:
